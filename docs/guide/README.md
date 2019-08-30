@@ -34,7 +34,7 @@ sapi = SaliencyClient("[username]", "[password]")
 A *study* is a set of data that you want to analyze. You can upload a list of datapoints as a study with the following command
 
 ```python
-sapi.add_study("study_name", "filename1.csv")
+sapi.add_study("study_name", "filename.csv")
 ```
 
 where `filename.csv` is a file with links to datapoints. `SaliencyClient` will automatically determine the column with links to datapoints. All other columns will be stored as metadata associated with the file.
