@@ -69,7 +69,7 @@ sapi.add_task("Knee structures", ["oai", "nhs"])
 
 After defining the task, you can log in to the [annotation tool](https://annotator.saliency.ai/) and start annotating.
 
-[TODO make a screenshot more realistic.]
+[TODO make the screenshot more realistic.]
 
 ![Annotation Tool](/annotation-tool.png)
 
@@ -91,7 +91,7 @@ loader = sapi.format_iterator(data_iter, "keras")
 and start training your models! We provide a UNET training code as a baseline:
 
 ```python
-loader = sapi.train("U-Net", loader)
+model = sapi.train("U-Net", loader)
 ```
 
 ## Deploy

@@ -1,7 +1,7 @@
 module.exports = {
 	title: 'Saliency.ai documentation',
-	theme: 'saliency-theme',
 	description: 'We enable you to use AI in your R&D',
+	theme: '../saliency-theme',
 	themeConfig: {
 		logo: '/light-bg.png',
 		repo: 'saliency-ai/saliency-client',
