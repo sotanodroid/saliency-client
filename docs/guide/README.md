@@ -34,17 +34,18 @@ sapi = SaliencyClient("[username]", "[password]")
 A *study* is a set of data that you want to analyze. You can upload a list of datapoints as a study with the following command
 
 ```python
-sapi.add_study("study_name", "filename.csv")
+sapi.add_study("filename.csv", "study_name")
 ```
 
 where `filename.csv` is a file with links to datapoints. `SaliencyClient` will automatically determine the column with links to datapoints. All other columns will be stored as metadata associated with the file.
 
 Alternatively, if you have your dataframe with links already stored as a pandas DataFrame, you can simply add it with
 ```python
-sapi.add_study("study_name", pandasDataFrame)
+sapi.add_study(pandasDataFrame, "study_name")
 ```
-#### Example: 
-You have knee MRIs for 1000 patients from Hospital A, along with the patients' age and disease severity. This is organized in HospitalA.csv which has three columns: age, disease_severity, and location_of_mri_on_your_server. You also have knee MRIs for 2000 patients from Hospital B, along with the patients' sex, state of residence, and disease severity. This is organized in a pandas dataframe called HospitalB which has four columns: sex, state, location_of_mri_on_your_server, and disease_severity. In both files, the location_of_mri_on_your_server column is a column of web addresses where your MRIs reside on your server. These datasets from Hospital A and Hospital B represent two different studies. You would call the sapi.add_study() function twice in order to upload both, even if you later want to merge the images and disease severitiy values from both for a single analysis.
+::: tip Example
+You have knee MRIs for 1000 patients from Hospital A, along with the patients' age and disease severity. This is organized in `HospitalA.csv` which has three columns: `age`, `disease_severity`, and `location_of_mri_on_your_server`. You also have knee MRIs for 2000 patients from Hospital B, along with the patients' sex, state of residence, and disease severity. This is organized in a pandas dataframe called HospitalB which has four columns: `sex`, `state`, `location_of_mri_on_your_server`, and `disease_severity`. In both files, the `location_of_mri_on_your_server` column is a column of web addresses where your MRIs reside on your server. These datasets from Hospital A and Hospital B represent two different studies. You would call the `sapi.add_study()` function twice in order to upload both, even if you later want to merge the images and disease severitiy values from both for a single analysis.
+:::
 
 ## Collect annotations
 
@@ -82,7 +83,7 @@ After sufficient number of annotations came back, you start training your models
 ```python
 data_iter = sapi.get_data(["oai", "nhs"],
                           labels="Knee structures",
-						  {"width": 500, "height": 500})
+						  config={"width": 500, "height": 500})
 ```
 
 We provide wrappers for this data iterater into a typical data loaders in tensorflow, keras, and pytorch. Run
