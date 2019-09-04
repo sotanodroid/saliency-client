@@ -1,2 +1,5 @@
 *~
 docs/.vuepress/dist
+.idea/
+env/
+__pycache__/
