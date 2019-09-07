@@ -18,13 +18,11 @@ class AuthenticationError(Exception):
 class SaliencyClient:
     seq = {"train": [],"val": [],"test": []}
     batch_size = 16
-    # host = "https://api.saliency.ai/"
-    host = 'http://127.0.0.1:8000/'
     task = "classification"
     temp_dir = 'tempfiles'
     classes = 0
 
-    def __init__(self, username, password, host="http://127.0.0.1:8000/"):
+    def __init__(self, username, password, host="https://api.saliency.ai/"):
         self.username = username
         self.password = password
         self.host = host
