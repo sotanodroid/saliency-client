@@ -33,9 +33,34 @@ class SaliencyClient:
     def login(self):
         auth_link = self.host + 'api-auth/token/'
         r = requests.post(auth_link, data={'username': self.username, 'password': self.password})
-        if r.status_code == 200:
-            headers = {'Authorization': 'Token ' + r.json()['token']}
-            return headers
+
+        if r.status_code != 200:
+            raise Exception("Authentication error")
+
+        headers = {'Authorization': 'Token ' + r.json()['token']}
+        return headers
+
+    def add_study(self, study, study_name):
+        if type(study) == pd.DataFrame:
+            filename = os.path.join(self.temp_dir, 'temp_study.csv')
+            study.to_csv(filename)
+        else:
+            if os.path.isfile(study):
+                filename = study
+            else:
+                print('File {} does not exist')
+                return
+        
+        with open(filename, 'rb') as file:
+            data = {'name': study_name}
+            files = {'file': file}
+            r = requests.post(self.host + 'studies/', data=data, files=files, headers=self.headers)
+        if r.status_code in (200, 201):
+            print('Study has been created')
+            return r.json()
+        else:
+            for error in r.json().values():
+                print(error)
 
     def add_study(self, study, study_name):
         if type(study) == pd.DataFrame:
