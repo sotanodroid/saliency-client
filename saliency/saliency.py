@@ -40,27 +40,35 @@ class SaliencyClient:
         headers = {'Authorization': 'Token ' + r.json()['token']}
         return headers
 
-    def add_study(self, study, study_name):
-        if type(study) == pd.DataFrame:
-            filename = os.path.join(self.temp_dir, 'temp_study.csv')
-            study.to_csv(filename)
-        else:
-            if os.path.isfile(study):
-                filename = study
-            else:
-                print('File {} does not exist')
-                return
+    def add_annotation_scheme(self, name, type, labels):
+        # TODO: check labels formatting
         
-        with open(filename, 'rb') as file:
-            data = {'name': study_name}
-            files = {'file': file}
-            r = requests.post(self.host + 'studies/', data=data, files=files, headers=self.headers)
+        data = {
+            "name": name,
+            "type": type,
+            "labels": labels
+        }
+        r = requests.post(self.host + 'schemes/', data=data, headers=self.headers)
         if r.status_code in (200, 201):
-            print('Study has been created')
+            print('Scheme has been created')
             return r.json()
         else:
             for error in r.json().values():
                 print(error)
+
+    def add_task(self, scheme, study):
+        # TODO: check labels formatting
+
+        data = {
+            "scheme": scheme,
+            "study": study,
+        }
+        r = requests.post(self.host + 'tasks/create_by_names/', data=data, headers=self.headers)
+        if r.status_code in (200, 201):
+            print('Task has been created')
+            return r.json()
+        else:
+            print(r.content)
 
     def add_study(self, study, study_name):
         if type(study) == pd.DataFrame:
@@ -216,6 +224,7 @@ class SaliencyClient:
             while link != None:
                 r = requests.get(link, headers=headers)
                 r = r.json()
+                print(r)
                 for datapoint in r['results']:
                     x = self.get_file(datapoint)
                     y = self.get_annotation(datapoint, x.shape, headers)
