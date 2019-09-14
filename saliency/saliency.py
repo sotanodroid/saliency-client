@@ -1,15 +1,16 @@
 import csv
+import os
+import tempfile
+import urllib
+import zipfile
+
 import cv2
 import numpy as np
-import os
 import pandas as pd
 import pydicom
 import requests
 import scipy.io as sio
 from skimage.draw import polygon
-import tempfile
-import urllib
-import zipfile
 
 
 class AuthenticationError(Exception):
@@ -266,3 +267,18 @@ class SaliencyClient:
         crop = image[height_offset:height + height_offset, width_offset:width + width_offset]
         return crop
 
+    def _list_objects(self, object):
+        """
+        Method to cover all listings.
+
+        param:object: is string, that represents an object name in the API.
+        e.g. 'tasks'
+        """
+        url = self.host + '{object}/'.format(object=object)
+        response = requests.get(url=url, headers=self.headers)
+
+        return response.json()
+
+    def list_tasks(self):
+        """Method to list all tasks."""
+        return self._list_objects('tasks')

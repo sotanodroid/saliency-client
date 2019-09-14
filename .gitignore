@@ -7,3 +7,4 @@ dist/
 saliency_client.egg-info/
 examples/test.csv
 examples/.ipynb_checkpoints/
+.vscode
