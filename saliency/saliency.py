@@ -268,19 +268,42 @@ class SaliencyClient:
         crop = image[height_offset:height + height_offset, width_offset:width + width_offset]
         return crop
 
-    def _list_objects(self, object):
+    def _list_objects(self, obj, obj_id=None):
         """
         Method to cover all listings.
 
-        param:object: is string, that represents an object name in the API.
-        e.g. 'tasks'
+        param:obj: is string, that represents an object name in the API. (e.g. 'tasks')
+        param:obj_id is actual id of the object in the API
         """
-        url = self.host + '{object}/'.format(object=object)
+        url = self.host + '{obj}/'.format(obj=obj)
+        if obj_id:
+            url += '{obj_id}/'.format(obj_id=obj_id)
         response = requests.get(url=url, headers=self.headers)
+
+        return response.json()
+
+    def _delete_objects(self, obj, obj_id):
+        """
+        Method to delete object.
+
+        param:obj: is string, that represents an object name in the API. (e.g. 'tasks')
+        param:obj_id is actual id of the object in the API
+        """
+        url = self.host + '{obj}/{obj_id}/'.format(obj=obj, obj_id=obj_id)
+        response = requests.delete(url=url, headers=self.headers)
 
         return response.json()
 
     def list_tasks(self):
         """Method to list all tasks."""
-        tasks = self._list_objects('tasks')
+        tasks = self._list_objects(obj='tasks')
+
         return pd.read_json(json.dumps(tasks))
+
+    def delete_task(self, task_id):
+        """
+        Method to delete specific task.
+
+        param:task_id is actual id of the task in the API
+        """
+        return self._delete_objects(obj='tasks', obj_id=task_id) 
