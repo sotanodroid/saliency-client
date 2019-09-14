@@ -1,4 +1,5 @@
 import csv
+import json
 import os
 import tempfile
 import urllib
@@ -281,4 +282,5 @@ class SaliencyClient:
 
     def list_tasks(self):
         """Method to list all tasks."""
-        return self._list_objects('tasks')
+        tasks = self._list_objects('tasks')
+        return pd.read_json(json.dumps(tasks))
