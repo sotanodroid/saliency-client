@@ -294,9 +294,13 @@ class SaliencyClient:
 
         return response.json()
 
-    def list_tasks(self):
-        """Method to list all tasks."""
-        tasks = self._list_objects(obj='tasks')
+    def list_tasks(self, task_id=None):
+        """
+        Method to list all tasks.
+
+        param:task_id if passed function would return information for specific task.
+        """
+        tasks = self._list_objects(obj='tasks', obj_id=task_id)
 
         return pd.read_json(json.dumps(tasks))
 
