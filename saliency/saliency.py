@@ -6,6 +6,7 @@ import urllib
 import zipfile
 
 import cv2
+import uuid
 import numpy as np
 import pandas as pd
 import pydicom
@@ -158,7 +159,9 @@ class SaliencyClient:
         return Y
 
     def get_file(self, file):
-        tmpfile = "%s/%s" % (tempfile.gettempdir(), file["filename"])
+        file_uid = str(uuid.uuid4())[:8]
+        file_name = file_uid + file["filename"]  # creates unique filename
+        tmpfile = "{filedir}/{filename}".format(filedir=tempfile.gettempdir(), filename=file_name)
 
         # check if cashed
         # filehash = self.get_file_hash(file)
@@ -167,7 +170,7 @@ class SaliencyClient:
 
         # check if already downloaded
         if not os.path.isfile(tmpfile):
-            urllib.request.urlretrieve(file["file"],tmpfile)
+            urllib.request.urlretrieve(file["file"], tmpfile)
 
         # process dicom MRI
         if file["datatype"] == "mri":
