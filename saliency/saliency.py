@@ -19,11 +19,25 @@ class AuthenticationError(Exception):
     pass
 
 class SaliencyClient:
-    seq = {"train": [],"val": [],"test": []}
-    batch_size = 16
-    task = "classification"
-    temp_dir = 'tempfiles'
-    classes = 0
+    """
+    The entry point to Saliency.ai. Object of this class will allow you to
+    * Log-in to your Saliency.ai account
+    * Upload datapoints
+    * Create tasks for labeling
+    * Query data in the requested format
+    * Train and deploy models
+    
+    In this document we list all methods available in `SaliencyClient`.
+
+    Attributes:
+        flight_speed     The maximum speed that such a bird can attain.
+    """
+
+#    seq = {"train": [],"val": [],"test": []}
+#    batch_size = 16
+#    task = "classification"
+#    temp_dir = 'tempfiles'
+#    classes = 0
 
     def __init__(self, username, password, host="https://api.saliency.ai/"):
         self.username = username
@@ -32,8 +46,9 @@ class SaliencyClient:
         self.headers = self.login()
         if not self.headers:
             raise AuthenticationError('Failed to authenticate "{}"'.format(username))
-
+    
     def login(self):
+        
         auth_link = self.host + 'api-auth/token/'
         r = requests.post(auth_link, data={'username': self.username, 'password': self.password})
 
@@ -60,6 +75,15 @@ class SaliencyClient:
                 print(error)
 
     def add_task(self, scheme, study):
+        """Summary or Description of the Function
+
+        Parameters:
+        argument1 (int): Description of arg1
+        
+        Returns:
+        int:Returning value
+
+        """
         # TODO: check labels formatting
 
         data = {
@@ -275,8 +299,8 @@ class SaliencyClient:
         """
         Method to cover all listings.
 
-        param:obj: is string, that represents an object name in the API. (e.g. 'tasks')
-        param:obj_id is actual id of the object in the API
+        param obj: is string, that represents an object name in the API. (e.g. 'tasks')
+        param obj_id: is actual id of the object in the API
         """
         url = self.host + '{obj}/'.format(obj=obj)
         if obj_id:
@@ -301,7 +325,7 @@ class SaliencyClient:
         """
         Method to list all tasks.
 
-        param:task_id if passed function would return information for specific task.
+        :param task_id: if passed function would return information for specific task.
         """
         tasks = self._list_objects(obj='tasks', obj_id=task_id)
 

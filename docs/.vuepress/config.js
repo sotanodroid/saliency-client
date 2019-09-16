@@ -10,15 +10,13 @@ module.exports = {
 			{ text: 'Guide', link: '/guide/' },
 			/*      { text: 'GitHub', link: 'https://github.com/saliency-ai/saliency-client/' },*/
 		],
-		sidebar: {
-			'/guide/': [
-				'',     
-			],/*
+	    sidebar: ['/guide/','/reference/']
+		    /*
 			'/': [
 				'',     
 				'one',  
 				'two'   
 			]*/
-		}
+		
 	}
 }
