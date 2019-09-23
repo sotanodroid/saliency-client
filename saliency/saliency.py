@@ -60,7 +60,6 @@ class SaliencyClient:
 
     def add_annotation_scheme(self, name, type, labels):
         # TODO: check labels formatting
-        
         data = {
             "name": name,
             "type": type,
@@ -295,7 +294,7 @@ class SaliencyClient:
         crop = image[height_offset:height + height_offset, width_offset:width + width_offset]
         return crop
 
-    def _list_objects(self, obj, obj_id=None):
+    def _list_objects(self, obj: str, obj_id=None) -> dict:
         """
         Method to cover all listings.
 
@@ -309,7 +308,7 @@ class SaliencyClient:
 
         return response.json()
 
-    def _delete_objects(self, obj, obj_id):
+    def _delete_objects(self, obj: str, obj_id: int) -> dict:
         """
         Method to delete object.
 
@@ -321,6 +320,36 @@ class SaliencyClient:
 
         return response.json()
 
+    def _create_object(self, obj: str, payload: dict) -> dict:
+        """
+        Method to make POST request to API.
+
+        param:obj: is string, that represents an object name in the API. (e.g. 'tasks')
+        param:payload: is valid dictionary to be posted in the API.
+        """
+        url = self.host + '{obj}/'.format(obj=obj)
+        response = requests.post(url=url, data=payload, headers=self.headers)
+
+        return response.json()
+
+    def create_model(self, params: dict):
+        """
+        Method to create a model in the API.
+
+        param:params: is a valid dictionary of model parameters:
+        {
+            'slug': 'lorem',
+            'name': 'ipsum',
+            'description': 'Ipsum',
+            'type': 'segmentation',
+            'params': '{"JSON": true}',
+            'datatype': 'mri',
+        }
+        """
+        model = self._create_object(obj='models', payload=params)
+
+        return model
+
     def list_tasks(self, task_id=None):
         """
         Method to list all tasks.
@@ -330,6 +359,14 @@ class SaliencyClient:
         tasks = self._list_objects(obj='tasks', obj_id=task_id)
 
         return pd.read_json(json.dumps(tasks))
+
+    def delete_model(self, model_id: int):
+        """
+        Method to delete specific task.
+
+        param:model_id is actual id of the model in the API
+        """
+        return self._delete_objects(obj='models', obj_id=model_id) 
 
     def delete_task(self, task_id):
         """
