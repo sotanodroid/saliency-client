@@ -59,8 +59,16 @@ class SaliencyClient:
         return headers
 
     def add_annotation_scheme(self, name, type, labels):
-        # TODO: check labels formatting
-        
+        if type == 'form':
+            for val in type:
+                if not isinstance(val, dict):
+                    raise TypeError('Form should be a list of form fields')
+
+        if type == 'segmentation':
+            for val in type:
+                if not isinstance(val, str):
+                    raise TypeError('Segmentation should be a valid list of descriptions')         
+
         data = {
             "name": name,
             "type": type,
