@@ -106,3 +106,20 @@ sapi.deploy("kltool",model)
 Deployed model will run entirely in the browser -- no data leaves enduser's computer. 
 
 See an example deployed model [here](http://demo.saliency.ai/kltool).
+
+## run localy along with local API server:
+Run local dev server with Saliency API.
+
+Then run this command with sour username and password in the API:
+```bash
+python -i main.py 'login' 'password'
+```
+
+This will login you to the API with activated `sapi` client.
+
+```python
+>>> sapi
+>>> <saliency.SaliencyClient object at 0x7f9c9b372be0>
+```
+
+From this point all the commands would awailable.
