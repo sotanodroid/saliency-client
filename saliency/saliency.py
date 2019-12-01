@@ -360,6 +360,24 @@ class SaliencyClient:
 
         return pd.read_json(json.dumps(tasks))
 
+    def pop_annotation(self):
+        """
+        Get the next annotation to predict
+        """
+        url = self.host + 'annotations/pop/'
+        response = requests.get(url=url, headers=self.headers)
+
+        return response.json()
+
+    def update_annotation(self, annotation):
+        """
+        Get the next annotation to predict
+        """
+        url = self.host + 'annotations/pop/'
+        response = requests.patch(url=url, json=annotation)
+
+        return response.json()
+
     def delete_model(self, model_id: int):
         """
         Method to delete specific task.
