@@ -381,20 +381,23 @@ class SaliencyClient:
         """
         url = self.host + 'annotations/pop/'
         response = requests.get(url=url, params = params, headers=self.headers)
+        results = response.json()
+        if len(results) == 0:
+            return None
 
-        return response.json()[0]
+        return results[0]
 
     def get_datapoint(self, datapoint_id):
         datapoint = self._list_objects(obj='datapoints', obj_id=datapoint_id)
 
         return datapoint
 
-    def update_annotation(self, annotation):
+    def update_annotation(self, annotation, pfile = None):
         """
         Get the next annotation to predict
         """
         url = self.host + 'annotations/%d/' % annotation["id"]
-        response = requests.patch(url=url, data=annotation, headers=self.headers)
+        response = requests.patch(url=url, data=annotation, headers=self.headers, files = {"file": pfile})
 
         return response.json()
 
