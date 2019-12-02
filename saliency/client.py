@@ -318,9 +318,9 @@ class SaliencyClient:
         url = self.host + '{obj}/{obj_id}/'.format(obj=obj, obj_id=obj_id)
         response = requests.delete(url=url, headers=self.headers)
 
-        return response.json()
+        return
 
-    def _create_object(self, obj: str, payload: dict) -> dict:
+    def _create_object(self, obj: str, payload: dict, files: dict = None) -> dict:
         """
         Method to make POST request to API.
 
@@ -328,7 +328,7 @@ class SaliencyClient:
         param:payload: is valid dictionary to be posted in the API.
         """
         url = self.host + '{obj}/'.format(obj=obj)
-        response = requests.post(url=url, data=payload, headers=self.headers)
+        response = requests.post(url=url, data=payload, headers=self.headers, files=files)
 
         return response.json()
 
@@ -350,6 +350,21 @@ class SaliencyClient:
 
         return model
 
+    def create_datapoint(self, params: dict, pfile: dict):
+        """
+        Method to create a model in the API.
+
+        param:params: is a valid dictionary of datapoint params
+        """
+        datapoint = self._create_object(obj='datapoints', payload=params, files = {"file": pfile})
+
+        return datapoint
+
+    def predict(self, datapoint_id, model):
+        url = self.host + 'datapoints/%d/predict/?model=%s' % (datapoint_id, model)
+        response = requests.get(url=url, headers=self.headers)
+        return response.json()
+
     def list_tasks(self, task_id=None):
         """
         Method to list all tasks.
@@ -358,23 +373,28 @@ class SaliencyClient:
         """
         tasks = self._list_objects(obj='tasks', obj_id=task_id)
 
-        return pd.read_json(json.dumps(tasks))
+        return tasks
 
-    def pop_annotation(self):
+    def pop_annotation(self, params={}):
         """
         Get the next annotation to predict
         """
         url = self.host + 'annotations/pop/'
-        response = requests.get(url=url, headers=self.headers)
+        response = requests.get(url=url, params = params, headers=self.headers)
 
-        return response.json()
+        return response.json()[0]
+
+    def get_datapoint(self, datapoint_id):
+        datapoint = self._list_objects(obj='datapoints', obj_id=datapoint_id)
+
+        return datapoint
 
     def update_annotation(self, annotation):
         """
         Get the next annotation to predict
         """
-        url = self.host + 'annotations/pop/'
-        response = requests.patch(url=url, json=annotation)
+        url = self.host + 'annotations/%d/' % annotation["id"]
+        response = requests.patch(url=url, data=annotation, headers=self.headers)
 
         return response.json()
 
@@ -393,3 +413,11 @@ class SaliencyClient:
         param:task_id is actual id of the task in the API
         """
         return self._delete_objects(obj='tasks', obj_id=task_id) 
+
+    def delete_datapoint(self, datapoint_id):
+        """
+        Method to delete specific datapoint.
+
+        param:datapoint_id is actual id of the datapoint in the API
+        """
+        return self._delete_objects(obj='datapoints', obj_id=datapoint_id) 

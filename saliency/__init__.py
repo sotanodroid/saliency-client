@@ -1,1 +1,1 @@
-from .saliency import SaliencyClient
+from .client import SaliencyClient
