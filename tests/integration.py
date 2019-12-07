@@ -4,6 +4,8 @@ from saliency.client import SaliencyClient
 
 class TestClient(unittest.TestCase):
     def test_predict(self):
+        pfile: tuple
+
         model_name = "densenet_mura_rs_v3_xr_shoulder.h5"
         client = SaliencyClient("user", "superuser", "http://127.0.0.1:8000/")
         with open('setup.py', 'r') as f:
