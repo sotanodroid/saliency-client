@@ -208,20 +208,20 @@ class SaliencyClient:
 
         return X
 
-    def get_annotation(self, file, shape, headers):
-        if file['annotation_set']:
-            r = requests.get(file['annotation_set'][0], headers=headers)
-            datatype = file['datatype']
-            annotation = r.json()
-            tmpfile = "%s/%s" % (tempfile.gettempdir(), annotation["filename"])
-            #if not os.path.isfile(tmpfile):
-            urllib.request.urlretrieve(annotation["file"], tmpfile)
-            if datatype == 'mri':
-                res = self.get_zip_mri_anno(tmpfile, shape)
-            elif datatype == 'xray':
-                res = self.get_xray_anno(tmpfile)
-            return res
-        return None
+    # def get_annotation(self, file, shape, headers):
+    #     if file['annotation_set']:
+    #         r = requests.get(file['annotation_set'][0], headers=headers)
+    #         datatype = file['datatype']
+    #         annotation = r.json()
+    #         tmpfile = "%s/%s" % (tempfile.gettempdir(), annotation["filename"])
+    #         #if not os.path.isfile(tmpfile):
+    #         urllib.request.urlretrieve(annotation["file"], tmpfile)
+    #         if datatype == 'mri':
+    #             res = self.get_zip_mri_anno(tmpfile, shape)
+    #         elif datatype == 'xray':
+    #             res = self.get_xray_anno(tmpfile)
+    #         return res
+    #     return None
 
 
     def create_task(self, scheme_id, study_id, datatype="xray"):
@@ -392,12 +392,20 @@ class SaliencyClient:
 
         return datapoint
 
+    def get_annotation(self, annotation_id):
+        annotation = self._list_objects(obj='annotations', obj_id=annotation_id)
+
+        return annotation
+
     def update_annotation(self, annotation, pfile = None):
         """
         Get the next annotation to predict
         """
         url = self.host + 'annotations/%d/' % annotation["id"]
-        response = requests.patch(url=url, data=annotation, headers=self.headers, files = {"file": pfile})
+        files = None
+        if pfile:
+            files = {"file": pfile}
+        response = requests.patch(url=url, data=annotation, headers=self.headers, files = files)
 
         return response.json()
 
